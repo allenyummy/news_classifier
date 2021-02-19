@@ -1,8 +1,12 @@
 from news_classifier import biznews
 
-news_text = "this is a news...."
+newslist = [
+    "this is news 1. bla bla bla bla....",
+    "this is another news article. foo bar 123"
+]
 
 nreader = biznews.init()
-result = nreader.classify(news_text)
 
-print(result)
+for news in newslist:
+    result = nreader.classify(news)
+    print(result)
