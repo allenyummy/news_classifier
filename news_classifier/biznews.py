@@ -33,6 +33,7 @@ class NewsReader():
         result = {
             'NN': True,
             'NN_SCORE': 50,
+            'NN_KEYWORDS': ['貪汙', 'xx'],
             'ESG': True,
             'ESG_SCORE': 50,
         }
