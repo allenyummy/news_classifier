@@ -66,9 +66,11 @@ class NewsReader():
                 nn_flag = True
 
         # Generate matched NN keywords
-        cnt_drafts = sorted(cnt_drafts, key = lambda x: (x[1], x[2]))
-        for each in cnt_drafts:
-            nn_tokens.append(each[0])
+        cnt_drafts = sorted(cnt_drafts, key = lambda x: (x[1], x[2]), reverse=True)
+        for cnts in cnt_drafts:
+            # return keywords + cnt for debugging
+            #nn_tokens.append((cnts[0], cnts[1]+cnts[2]))
+            nn_tokens.append(cnts[0])
 
         # FIXME: Calculate a NN score (亂做一通)
         if len(cnt_drafts) > 0:
