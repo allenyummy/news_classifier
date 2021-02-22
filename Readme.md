@@ -13,3 +13,9 @@
 
 - 開發環境:
     - Windows + python 3.6
+
+
+## DEV MEMO:
+
+(暫用news env, python = 3.6)
+source activate news 
