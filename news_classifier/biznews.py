@@ -1,13 +1,14 @@
-
+from news_classifier import config
 
 def init():
     """ Create an object and init it. Make it as a function as we may need to config something."""
     c = NewsReader()
+    c.load_NN_keywords()
 
-    # NN_Keywords file.
-    NN_KEYWORDS = r'docs/NN_keywords.txt'
-    c.load_NN_keywords(NN_KEYWORDS)
-    
+    # Fixme: we may need to load NN_Keywords from a file?
+    # NN_KEYWORDS = r'docs/NN_keywords.txt'
+    # c.load_NN_keywords_fromfile(NN_KEYWORDS)
+
     return c
 
 class NewsReader():
@@ -16,9 +17,12 @@ class NewsReader():
     def __init__(self):
         self.nn_keywords = []
         
+    def load_NN_keywords(self):
+        """Load (user defined) NN Keywords from config."""
+        self.nn_keywords = config.NN_KEYWORDS
 
-    def load_NN_keywords(self, nn_filename):
-        """Load (user defined) NN Key words from text file. (UTF-8 encoding)
+    def load_NN_keywords_fromfile(self, nn_filename):
+        """Load (user defined) NN Keywords from text file. (UTF-8 encoding)
             File Info:
                 Encoding: UTF-8
                 Format: Each line = 1 key words
