@@ -76,7 +76,8 @@ class NewsReader():
             #nn_tokens.append((cnts[0], cnts[1]+cnts[2]))
             nn_tokens.append(cnts[0])
 
-        # FIXME: Calculate a NN score (亂做一通)
+        # FIXME: we may need a better way to evaluate the NN score 
+        # For now, just implement a simple function as placeholder.
         if len(cnt_drafts) > 0:
             nn_score = 80 + 5 * len(cnt_drafts)
             if nn_score > 100: nn_score = 100
