@@ -22,10 +22,19 @@ def get_stopwords(
         )
 
     stopwords_set = set()
-    if not stopwords or stopwords.endswith(".txt"):
-        stopwords_set = get_stopwords_from_file(stopwords)
-    else:
-        stopwords_set = get_stopwords_from_string_or_list(stopwords)
+    stopwords_set = get_stopwords_from_file()
+
+    if is_string(stopwords):
+        if stopwords.endswith(".txt"):
+            stopwords_set = get_stopwords_from_file(stopwords)
+        else:
+            stopwords_set = get_stopwords_from_string_or_list(stopwords)
+
+    elif is_list_of_string(stopwords):
+        if stopwords[0].endswith(".txt"):
+            stopwords_set = get_stopwords_from_file(stopwords)
+        else:
+            stopwords_set = get_stopwords_from_string_or_list(stopwords)
 
     if add_spacy_stopwords:
         stopwords_set.update(spacy_stopwords)
@@ -42,7 +51,7 @@ def get_stopwords_from_string_or_list(stopwords: Union[str, List[str]]) -> set:
 
 
 def get_stopwords_from_file(
-    filename_or_filelist: Optional[Union[str, List[str]]]
+    filename_or_filelist: Optional[Union[str, List[str]]] = None
 ) -> set:
 
     if is_string(filename_or_filelist):
@@ -51,11 +60,10 @@ def get_stopwords_from_file(
     file_abs_dirname = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "stopwords_file"
     )
-    file_end = r".txt"
 
     candidate_file = list()
     for file in os.listdir(file_abs_dirname):
-        if file.endswith(file_end):
+        if file.endswith(".txt"):
             if not filename_or_filelist:
                 candidate_file.append(file)
             elif filename_or_filelist and file in filename_or_filelist:
