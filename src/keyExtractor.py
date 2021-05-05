@@ -12,10 +12,9 @@ from flair.embeddings import (
     DocumentPoolEmbeddings,
 )
 from src.utils import (
+    utility as ut,
     tokenization as tk,
-    check_input_type_and_transform as ct,
     instantiate as ins,
-    stopwords as sw,
     evaluation as ev,
     struct as st,
 )
@@ -44,15 +43,16 @@ class keyExtractor:
     def extract_keywords(
         self,
         text: Union[str, List[str], List[List[str]]],
-        stopwords: Optional[Union[str, List[str]]] = None,
         is_split_into_words: Optional[bool] = False,
+        stopwords: Optional[Union[str, List[str]]] = None,
+        load_default_stopwords: Optional[bool] = True,
         n_gram: Optional[int] = 1,
         top_n: Optional[int] = 5,
     ) -> List[List[st.KeyStruct]]:
 
         """ Check and Transform """
         logger.info("===== CHECK AND TRANSFORM =====")
-        text = ct.check_input_type_and_transform(text, is_split_into_words)
+        text = ut.transform_text(text, is_split_into_words)
         logger.info(text)
 
         """ Tokenize documents """
@@ -65,7 +65,9 @@ class keyExtractor:
 
         """ Get stopwords """
         logger.info("===== GET STOPWORDS ====")
-        stopwords_list = sw.get_stopwords(stopwords, add_spacy_stopwords=True)
+        stopwords_list = ut.load_stopwords(
+            stopwords, load_default_stopwords=load_default_stopwords
+        )
         logger.info(f"stopwords size: {len(stopwords_list)}")
 
         """ Get content words by removing stopwords """
@@ -199,4 +201,5 @@ if __name__ == "__main__":
             他強調，關於台資台企來中國投資，有完備的法律、法規和管理機制，對於具體個案，有關部門會科學評估，依法依規處理。"
     text = "墾丁悠活麗緻渡假村的三至六區以集合住宅名義興建，目前仍屬停業狀態，僅一、二區共161間房正常營業。屏東縣政府觀光傳播處指出，業者正在辦理使用執照變更成為旅館用途，日前已經通過環評，但仍待墾丁國家公園管理處核准開發許可，最終還需回到縣府申請旅館登記證，屆時才能恢復營業。"
     text = "悠活渡假公司前董事長曾忠信涉及掏空公司資產、詐領資策會補助款及故買盜伐林木等3案件，不法獲益上億元，台南地檢署歷經1年多的偵查，29日將曾忠信等6人依違反證交法、詐欺、背信罪及故買贓物等罪起訴，並請法官從重量刑。"
-    keyword_lists = ke.extract_keywords(text, n_gram=1, top_n=10)
+    text = "法尼新創科技股份有限公司負責人田書旗、黃淑霞夫妻倆，涉嫌以投資「乙太幣拓礦礦機」、「認購飲料店、咖啡店、火鍋店及餐廳之股份」等名義，吸引民眾投資，估計違法吸金17億餘元，受害投資民眾恐多達2000人，桃園地檢署今天偵結，已依違反銀行法、非法經營期貨經理事業等罪嫌，將田書旗夫妻與員工共13人提起公訴。田書旗（40歲）、黃淑霞（42歲）從106年7月起，設計「乙太幣拓礦礦機」、「認購公司股份或特別股股份」、「認購飲料店、咖啡店、火鍋店及餐廳之股份」、「購買奇歐外匯期貨」等方案，由陳育勝等人擔任講師，四處召開說明會，以每年有18%到86%不等的高獲利，吸引民眾投資。透過說明會、網路與通訊軟體發布的訊息，田書旗夫妻倆迅速吸收許多民眾加入投資行列，檢方說，夫妻倆以「吸後金補前金」的方式，按約定將紅利撥付給投資民眾，其餘款項全挪為己用。桃園地檢署接獲檢舉後，指揮法務部調查局台北市調查處追查，偵結前已查證262位投資民眾，而他們的總投資金額已高達3億3500餘萬元，檢方說，比對扣案檔案、外部金流等資料，估計田書旗夫妻倆吸金總金額高達17億元，投資民眾被牽連受害的恐怕超過2000人，已因田書旗等人違反非銀行法「不得經營準收受存款業務達1億元以上」、「非法經營期貨經理事業」等罪嫌，將他們提起公訴。"
+    keyword_lists = ke.extract_keywords(text, stopwords=["「", "」"], n_gram=1, top_n=5)
