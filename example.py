@@ -1,9 +1,13 @@
-from news_classifier import biznews
+# encoding=utf-8
+# Author: Yu-Lun Chiang
+# Description: Example
 
 import os, json
+from src.moduleII.SimpleComparator import SimpleComparator
+
 DJROOT = r"news_samples/dowjones"
 
-nreader = biznews.init()
+sc = SimpleComparator()
 
 # Process sample DJ news 
 files = os.listdir(DJROOT)
@@ -15,7 +19,7 @@ for fn in files:
         news_body = data['BodyHtml']
 
         # News Classify
-        result = nreader.classify(news_title, news_body)
+        result = sc.classify(news_title, news_body)
         
         print(newsfn, news_title)
         print(result)
