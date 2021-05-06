@@ -12,8 +12,8 @@ logger = logging.getLogger(__name__)
 
 
 DEFAULT_DIR_PATH = {
-    "Negative_News": "src/utils/keywords_file/negative_news/",
-    "ESG_News": "src/utils/keywords_file/esg/",
+    "Negative_News": "src/utils/keywords/negative_news/",
+    "ESG_News": "src/utils/keywords/esg/",
 }
 
 
