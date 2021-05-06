@@ -7,11 +7,12 @@ from src.utils.utility import format
 from src.moduleII.SimpleComparator import SimpleComparator
 
 DJROOT = r"data/dowjones"
+files = os.listdir(DJROOT)
 
+## SimpleComparator
 sc1 = SimpleComparator(category="Negative_News")
 sc2 = SimpleComparator(category="ESG_News")
 
-files = os.listdir(DJROOT)
 for fn in files:
     newsfn = "{}/{}".format(DJROOT, fn)
     with open(newsfn) as json_file:
@@ -19,6 +20,7 @@ for fn in files:
         news_title = data["Headline"]
         news_body = data["BodyHtml"]
 
+        print("###### Simple Comparator ######")
         res = list()
         for sc in [sc1, sc2]:
             res.append(sc.classify(news_title, news_body))
