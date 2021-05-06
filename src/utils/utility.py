@@ -5,6 +5,7 @@
 import logging
 import os
 from typing import Union, List, Optional
+from src.utils import struct as st
 
 logger = logging.getLogger(__name__)
 
@@ -58,6 +59,10 @@ def transform_text(
 
 def load(input: Union[str, List[str]]) -> List[str]:
 
+    ret = list()
+    if not input:
+        return ret
+
     if not is_string(input) and not is_list_of_string(input):
         raise ValueError(f"Expected string or list of string, but got {type(input)}")
 
@@ -67,7 +72,6 @@ def load(input: Union[str, List[str]]) -> List[str]:
             f.close()
         return ret
 
-    ret = list()
     if is_string(input):
         if input.endswith(".txt"):
             ret.extend(load_file(input))
@@ -118,11 +122,13 @@ def load_stopwords(
     return list(set(ret))
 
 
-def load_keywords(
-    keywords: Optional[Union[str, List[str]]] = None,
-) -> List[str]:
+def format(input: List[st.RetStruct]) -> dict:
 
-    ret = list()
-    if keywords:
-        ret.extend(load(keywords))
-    return list(set(ret))
+    return {
+        "NN": True if input[0].news_category == st.NewsCategory.NN else False,
+        "NN_SCORE": input[0].score,
+        "NN_KEYWORDS": input[0].keywords,
+        "ESG": True if input[1].news_category == st.NewsCategory.NN else False,
+        "ESG_SCORE": input[1].score,
+        "ESG_KEYWORDS": input[1].keywords,
+    }
