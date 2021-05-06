@@ -20,7 +20,3 @@ class BaseComparator:
     def keywords(self):
         raise NotImplemented
 
-    @staticmethod
-    @abstractmethod
-    def format(self):
-        raise NotImplemented
