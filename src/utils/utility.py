@@ -4,8 +4,11 @@
 
 import logging
 import os
-from typing import Union, List, Optional
+from typing import List, Dict, Union, Optional
+import torch
+from flair.data import Sentence
 from src.utils import struct as st
+
 
 logger = logging.getLogger(__name__)
 
@@ -132,3 +135,22 @@ def format(input: List[st.RetStruct]) -> dict:
         "ESG_SCORE": input[1].score,
         "ESG_KEYWORDS": input[1].keywords,
     }
+
+
+def reshape_embedding(embedding: torch.tensor) -> torch.tensor:
+    return embedding.view(1, -1)
+
+
+def get_word_embedding(word_embedding_model, word: str) -> torch.tensor:
+    word = Sentence(word)
+    word_embedding_model.embed(word)
+    word_embedding = word[0].embedding
+    return word_embedding.view(1, -1)
+
+
+def save_embedding(embedding: Dict[str, torch.tensor], outpath: str):
+    if not os.path.exists(outpath):
+        os.makedirs(outpath)
+    for word, embedding in embedding.items():
+        outfilepath = os.path.join(outpath, f"{word}.pt")
+        torch.save(embedding, outfilepath)
