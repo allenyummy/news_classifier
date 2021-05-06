@@ -3,13 +3,14 @@
 # Description: Example
 
 import os, json
+from src.utils.utility import format
 from src.moduleII.SimpleComparator import SimpleComparator
 
 DJROOT = r"data/dowjones"
 
-sc = SimpleComparator()
+sc1 = SimpleComparator(category="Negative_News")
+sc2 = SimpleComparator(category="ESG_News")
 
-# Process sample DJ news
 files = os.listdir(DJROOT)
 for fn in files:
     newsfn = "{}/{}".format(DJROOT, fn)
@@ -18,7 +19,10 @@ for fn in files:
         news_title = data["Headline"]
         news_body = data["BodyHtml"]
 
-        # News Classify
-        result = sc.classify(news_title, news_body)
+        res = list()
+        for sc in [sc1, sc2]:
+            res.append(sc.classify(news_title, news_body))
+
         print(newsfn, news_title)
-        print(result)
+        print(format(res))
+        print()
