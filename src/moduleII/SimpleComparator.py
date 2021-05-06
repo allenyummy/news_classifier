@@ -5,10 +5,8 @@
 import logging
 import os
 from typing import Union, List, Optional, Tuple
-from src.utils import (
-    struct as st,
-    keywords as ke,
-)
+from src.utils import struct as st
+from src.utils.keywords import keywords as ke
 from src.moduleII.base import BaseComparator
 
 logger = logging.getLogger(__name__)
