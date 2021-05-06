@@ -1,6 +1,6 @@
 # encoding=utf-8
 # Author: Yu-Lun Chiang
-# Description:
+# Description: Embedding-based Comparator
 
 import logging
 import os
@@ -18,9 +18,6 @@ class EmbeddingBasedComparator(BaseComparator):
         raise NotImplemented
 
     def evaluate(self):
-        raise NotImplemented
-
-    def _load_keywords(self):
         raise NotImplemented
 
     @property
