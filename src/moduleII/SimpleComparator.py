@@ -119,5 +119,5 @@ class SimpleComparator(BaseComparator):
         return news_category, score, matched_keywords
 
     @property
-    def keywords(self):
-        return self._keywords
+    def keywords(self) -> Tuple[str]:
+        return tuple(self._keywords)
