@@ -113,7 +113,7 @@ def load_stopwords(
 
         """ Default stopwords file path"""
         file_abs_dirname = os.path.join(
-            os.path.dirname(os.path.abspath(__file__)), "stopwords_file"
+            os.path.dirname(os.path.abspath(__file__)), "stopwords"
         )
         file_path_list = [
             os.path.join(file_abs_dirname, file)
