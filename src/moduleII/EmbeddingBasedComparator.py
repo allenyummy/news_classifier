@@ -55,6 +55,8 @@ class EmbeddingBasedComparator(BaseComparator):
         return tuple(self._keywords)
 
     def keyword_embedding(self, keyword: str):
+        ## Be careful to use it. Don't assign value to it.
+        ## It only support as look-up table.
         return self._keywords_embeddings[keyword]
 
     def _load_embeddings(self, load_cache, cache_dir) -> Dict[str, torch.tensor]:
