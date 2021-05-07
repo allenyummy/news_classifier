@@ -15,6 +15,43 @@ import monpa
 logger = logging.getLogger(__name__)
 
 
+TOKENIZER_MODEL_MAP = {
+    "ckiptagger": "model/ckiptagger/",
+    "ckip-transformers-albert-tiny": "ckiplab/albert-tiny-chinese-ws",
+    "ckip-transformers-albert-base": "ckiplab/albert-base-chinese-ws",
+    "ckip-transformers-bert-base": "ckiplab/bert-base-chinese-ws",
+    "bert-tokenizer": "hfl/chinese-bert-wwm",
+    "spacy-zh_core_web_sm_3.0.0": "model/spacy/zh_core_web_sm-3.0.0/zh_core_web_sm/zh_core_web_sm-3.0.0/",
+    "spacy-zh_core_web_md_3.0.0": "model/spacy/zh_core_web_md-3.0.0/zh_core_web_md/zh_core_web_md-3.0.0",
+    "spacy-zh_core_web_lg_3.0.0": "model/spacy/zh_core_web_lg-3.0.0/zh_core_web_lg/zh_core_web_lg-3.0.0",
+    "spacy-zh_core_web_trf_3.0.0": "model/spacy/zh_core_web_trf-3.0.0/zh_core_web_trf/zh_core_web_trf-3.0.0",
+    "jieba": None,
+    "monpa": None,
+    "nltk": None,
+}
+
+
+def TokenizerFactory(name: str):
+
+    model_path = TOKENIZER_MODEL_MAP[name]
+
+    LOCALIZERS = {
+        "ckiptagger": Ckip_Tagger_Tokenizer,
+        "ckip-transformers-albert-tiny": Ckip_Transformers_Tokenizer,
+        "ckip-transformers-albert-base": Ckip_Transformers_Tokenizer,
+        "ckip-transformers-bert-base": Ckip_Transformers_Tokenizer,
+        "bert-tokenizer": Bert_Tokenizer,
+        "spacy-zh_core_web_sm_3.0.0": Spacy_Chinese_Tokenizer,
+        "spacy-zh_core_web_md_3.0.0": Spacy_Chinese_Tokenizer,
+        "spacy-zh_core_web_lg_3.0.0": Spacy_Chinese_Tokenizer,
+        "spacy-zh_core_web_trf_3.0.0": Spacy_Chinese_Tokenizer,
+        "jieba": Jieba_Tokenizer,
+        "monpa": Monpa_Tokenizer,
+        "nltk": NLTK_Tokenizer,
+    }
+    return LOCALIZERS[name](model_path) if model_path else LOCALIZERS[name]()
+
+
 class Tokenizer(ABC):
     @abstractmethod
     def tokenize(self, text: Union[str, List[str]]) -> List[List[str]]:
