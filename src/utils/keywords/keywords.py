@@ -23,11 +23,11 @@ def KeywordsFactory(
     load_default: Optional[bool] = True,
 ):
 
-    KEYWORDS_LOCALIZERS = {
+    LOCALIZERS = {
         "Negative_News": NegativeNewsKeywords,
         "ESG_News": ESGNewsKeywords,
     }
-    return KEYWORDS_LOCALIZERS[name](keywords, load_default)
+    return LOCALIZERS[name](keywords, load_default)
 
 
 class Keywords(ABC):
