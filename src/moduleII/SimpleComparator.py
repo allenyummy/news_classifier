@@ -90,7 +90,7 @@ class SimpleComparator(BaseComparator):
             rtype3: list of string
         """
 
-        ## Keywords Matching
+        """ Keywords Matching """
         cnt_drafts = list()
         for keyword in self.keywords:
             title_cnt = news_title.count(keyword)
@@ -100,7 +100,7 @@ class SimpleComparator(BaseComparator):
         cnt_drafts = sorted(cnt_drafts, key=lambda x: (x[1], x[2]), reverse=True)
         matched_keywords = [cnt[0] for cnt in cnt_drafts]
 
-        ## Scoring
+        """ Scoring """
         score = 0.00
         if len(cnt_drafts) > 0:
             score = 0.50 + 0.01 * len(cnt_drafts)
@@ -108,7 +108,7 @@ class SimpleComparator(BaseComparator):
                 score = 1.00
         score = round(score, 2)
 
-        ## Category
+        """ Category """
         news_category = st.NewsCategory.OTHER
         if score > 0.50:
             if self.category == st.NewsCategory.NN.value:
