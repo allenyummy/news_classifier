@@ -4,7 +4,7 @@
 
 import logging
 import os
-from typing import Union, List, Optional
+from typing import List, Tuple, Union, Optional
 from abc import ABC, abstractmethod
 from src.utils import utility as ut
 
@@ -57,7 +57,13 @@ class Keywords(ABC):
 
     @property
     @abstractmethod
-    def keywords(self) -> List[str]:
+    def keywords(self) -> Tuple[str]:
+        ## It's not allowed to change self.keywords.
+        ## Property decorator makes it impossible to set attribute.
+        ## It means we can't assign values to self.keywords. (e.g., self.keywords = XXX)
+        ## However, it still can do operations of "append", "remove", "add" and so on.
+        ## If type of self.keywords is list or set, we can modify it (e.g., self.keywords.append(XXX)), which shouldn't be allowed.
+        ## So, we need to return self.keywords as tuple of string whose feature is that we can't modify elements in self.keywords.
         raise NotImplemented
 
 
@@ -73,8 +79,8 @@ class NegativeNewsKeywords(Keywords):
         self._keywords = self.load(keywords, load_default)
 
     @property
-    def keywords(self):
-        return self._keywords
+    def keywords(self) -> Tuple[str]:
+        return tuple(self._keywords)
 
 
 class ESGNewsKeywords(Keywords):
@@ -89,5 +95,5 @@ class ESGNewsKeywords(Keywords):
         self._keywords = self.load(keywords, load_default)
 
     @property
-    def keywords(self):
-        return self._keywords
+    def keywords(self) -> Tuple[str]:
+        return tuple(self._keywords)
