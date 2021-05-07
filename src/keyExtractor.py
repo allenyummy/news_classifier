@@ -14,7 +14,6 @@ from flair.embeddings import (
 from src.utils import (
     utility as ut,
     tokenization as tk,
-    instantiate as ins,
     evaluation as ev,
     struct as st,
 )
@@ -27,7 +26,7 @@ class keyExtractor:
     def __init__(
         self, tokenization_method_or_model: str, embedding_method_or_model: str
     ):
-        self.tokenizer = ins.instantiate_tokenizer(tokenization_method_or_model)
+        self.tokenizer = tk.TokenizerFactory(tokenization_method_or_model)
         ## use [CLS] embedding as document embedding
         ## scores are always low.
         # self.document_embedding_model = (
