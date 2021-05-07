@@ -58,20 +58,9 @@ class Tokenizer(ABC):
         raise NotImplementedError
 
 
-class Ckip_Transformers_Tokenizer(Tokenizer):
-
-    MODEL_NAME_ON_HUGGINGFACE_MODEL_HUB = {
-        1: "ckiplab/albert-tiny-chinese-ws",
-        2: "ckiplab/albert-base-chinese-ws",
-        3: "ckiplab/bert-base-chinese-ws",
-    }
-
-    def __init__(self, level: int = 1, device: int = -1):
-        if level not in self.MODEL_NAME_ON_HUGGINGFACE_MODEL_HUB.keys():
-            raise ValueError(
-                f"Expect {self.MODEL_NAME_ON_HUGGINGFACE_MODEL_HUB.keys()} but got {level}."
-            )
-        self.ws_model = CkipWordSegmenter(level=level, device=device)
+class Ckip_Tagger_Tokenizer(Tokenizer):
+    def __init__(self, model_path: str):
+        self.ws_model = WS(model_path)
 
     def tokenize(self, text: Union[str, List[str]]) -> List[List[str]]:
 
@@ -87,9 +76,22 @@ class Ckip_Transformers_Tokenizer(Tokenizer):
         return tokenized_text
 
 
-class Ckip_Tagger_Tokenizer(Tokenizer):
+class Ckip_Transformers_Tokenizer(Tokenizer):
+
+    MODEL_LEVEL_MAP = {
+        "ckiplab/albert-tiny-chinese-ws": 1,
+        "ckiplab/albert-base-chinese-ws": 2,
+        "ckiplab/bert-base-chinese-ws": 3,
+    }
+
     def __init__(self, model_path: str):
-        self.ws_model = WS(model_path)
+        if model_path not in self.MODEL_LEVEL_MAP.keys():
+            raise ValueError(
+                f"Expect {self.MODEL_LEVEL_MAP.keys()} but got {model_path}."
+            )
+        self.ws_model = CkipWordSegmenter(
+            level=self.MODEL_LEVEL_MAP[model_path], device=-1
+        )
 
     def tokenize(self, text: Union[str, List[str]]) -> List[List[str]]:
 
@@ -111,12 +113,12 @@ class Bert_Tokenizer(Tokenizer):
 
     def tokenize(self, text: Union[str, List[str]]) -> List[List[str]]:
         if isinstance(text, str):
-            tokenized_text = [self.ws_model(text)]
+            tokenized_text = self.ws_model(text)
 
         elif isinstance(text, list):
             tokenized_text = list()
             for doc_text in text:
-                doc = [self.ws_model.tokenize(doc_text)]
+                doc = self.ws_model.tokenize(doc_text)
                 tokenized_text.append(doc)
         else:
             raise ValueError(
