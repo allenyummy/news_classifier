@@ -45,3 +45,23 @@ class RetStruct(NamedTuple):
             f"[   SCORE  ]: {self.score}\n"
             f"[ KEYWORDS ]: {self.keywords}\n"
         )
+
+
+class SpecStruct(NamedTuple):
+
+    NN: bool
+    NN_SCORE: float
+    NN_KEYWORDS: List[str]
+    ESG: bool
+    ESG_SCORE: float
+    ESG_KEYWORDS: List[str]
+
+    def __repr__(self):
+        return (
+            f"[      NN      ]: {self.NN}\n"
+            f"[   NN_SCORE   ]: {self.NN_SCORE}\n"
+            f"[  NN_KEYWORDS ]: {self.NN_KEYWORDS}\n"
+            f"[      ESG     ]: {self.ESG}\n"
+            f"[   ESG_SCORE  ]: {self.ESG_SCORE}\n"
+            f"[ ESG_KEYWORDS ]: {self.ESG_KEYWORDS}\n"
+        )
