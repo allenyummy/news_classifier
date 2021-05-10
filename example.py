@@ -3,6 +3,7 @@
 # Description: Example
 
 import os, json
+from src.utils import struct as st
 from src.utils.utility import format
 from src.moduleII.SimpleComparator import SimpleComparator
 from src.moduleII.EmbeddingBasedComparator import EmbeddingBasedComparator
@@ -31,6 +32,7 @@ ebc2 = EmbeddingBasedComparator(
     load_cache=True,
     save_cache=False,
 )
+method = "key_based"  ## doc_based or key_based
 
 for fn in files:
     newsfn = "{}/{}".format(DJROOT, fn)
@@ -40,19 +42,35 @@ for fn in files:
         news_body = data["BodyHtml"]
 
         print(newsfn, news_title)
+        print(f"[ TITLE ]: {news_title}")
+        print(f"[  BODY ]: {news_body}")
 
         print("###### Simple Comparator ######")
         res = list()
         for sc in [sc1, sc2]:
             res.append(sc.classify(news_title, news_body))
 
-        print(format(res))
-        print()
+        sc_ret = st.SpecStruct(
+            NN=True if res[0].news_category == st.NewsCategory.NN else False,
+            NN_SCORE=res[0].score,
+            NN_KEYWORDS=res[0].keywords,
+            ESG=True if res[1].news_category == st.NewsCategory.NN else False,
+            ESG_SCORE=res[1].score,
+            ESG_KEYWORDS=res[1].keywords,
+        )
+        print(sc_ret)
 
         print("###### Embedding-Based Comparator ######")
         res = list()
-        for sc in [ebc1, ebc2]:
-            res.append(sc.classify(news_title, news_body))
+        for eb in [ebc1, ebc2]:
+            res.append(eb.classify(news_title, news_body, method=method))
 
-        print(format(res))
-        print()
+        ebc_ret = st.SpecStruct(
+            NN=True if res[0].news_category == st.NewsCategory.NN else False,
+            NN_SCORE=res[0].score,
+            NN_KEYWORDS=res[0].keywords,
+            ESG=True if res[1].news_category == st.NewsCategory.NN else False,
+            ESG_SCORE=res[1].score,
+            ESG_KEYWORDS=res[1].keywords,
+        )
+        print(ebc_ret)
