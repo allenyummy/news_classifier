@@ -50,27 +50,27 @@ class keyExtractor:
     ) -> List[List[st.KeyStruct]]:
 
         """ Check and Transform """
-        logger.info("===== CHECK AND TRANSFORM =====")
+        logger.debug("===== CHECK AND TRANSFORM =====")
         text = ut.transform_text(text, is_split_into_words)
-        logger.info(text)
+        logger.debug(text)
 
         """ Tokenize documents """
-        logger.info("===== TOKENIZATION =====")
+        logger.debug("===== TOKENIZATION =====")
         if not is_split_into_words:
             tokenized_docs = self.tokenizer.tokenize(text)
         else:
             tokenized_docs = text
-        logger.info(tokenized_docs)
+        logger.debug(tokenized_docs)
 
         """ Get stopwords """
-        logger.info("===== GET STOPWORDS ====")
+        logger.debug("===== GET STOPWORDS ====")
         stopwords_list = ut.load_stopwords(
             stopwords, load_default_stopwords=load_default_stopwords
         )
-        logger.info(f"stopwords size: {len(stopwords_list)}")
+        logger.debug(f"stopwords size: {len(stopwords_list)}")
 
         """ Get content words by removing stopwords """
-        logger.info("===== GET CONTENT WORDS BY REMOVING STOPWORDS =====")
+        logger.debug("===== GET CONTENT WORDS BY REMOVING STOPWORDS =====")
         content_docs = list()
         for tokenized_doc in tokenized_docs:
             content_doc = list()
@@ -78,20 +78,20 @@ class keyExtractor:
                 if token not in stopwords_list:
                     content_doc.append((i, token))
             content_docs.append(content_doc)
-        logger.info(content_docs)
+        logger.debug(content_docs)
 
         """ Get N-gram """
-        logger.info("===== GET N-GRAM =====")
+        logger.debug("===== GET N-GRAM =====")
         n_gram_docs = list()
         for doc in content_docs:
             n_gram_doc = list()
             for i in range(len(doc) - n_gram + 1):
                 n_gram_doc.append(doc[i : i + n_gram])
             n_gram_docs.append(n_gram_doc)
-        logger.info(n_gram_docs)
+        logger.debug(n_gram_docs)
 
         """ Get embeddings and calculate score """
-        logger.info("===== GET EMBEDDINGS & CALCULATE SCORE =====")
+        logger.debug("===== GET EMBEDDINGS & CALCULATE SCORE =====")
         keyword_lists = list()
         for tokenized_doc, n_gram_doc in zip(tokenized_docs, n_gram_docs):
             doc_embedding = self._get_doc_embedding(tokenized_doc)
@@ -114,8 +114,8 @@ class keyExtractor:
 
         for keyword_list in keyword_lists:
             for key in keyword_list:
-                logger.info(key)
-            logger.info("--")
+                logger.debug(key)
+            logger.debug("--")
 
         return keyword_lists
 
