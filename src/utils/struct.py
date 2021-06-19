@@ -3,7 +3,7 @@
 # Description: Data Structure
 
 import logging
-from typing import List, NamedTuple
+from typing import List, NamedTuple, Optional
 import torch
 from enum import Enum
 
@@ -37,6 +37,7 @@ class RetStruct(NamedTuple):
     news_category: NewsCategory
     score: float
     keywords: List[str]
+    debug_list: Optional[List[dict]] = list()
 
     def __repr__(self):
         return (
@@ -44,6 +45,7 @@ class RetStruct(NamedTuple):
             f"[ CATEGORY ]: {self.news_category}\n"
             f"[   SCORE  ]: {self.score}\n"
             f"[ KEYWORDS ]: {self.keywords}\n"
+            f"[   DEBUG  ]: {self.debug_list}\n"
         )
 
 
@@ -52,16 +54,20 @@ class SpecStruct(NamedTuple):
     NN: bool
     NN_SCORE: float
     NN_KEYWORDS: List[str]
+    NN_DEBUG_LIST: List[dict]
     ESG: bool
     ESG_SCORE: float
     ESG_KEYWORDS: List[str]
+    ESG_DEBUG_LIST: List[dict]
 
     def __repr__(self):
         return (
             f"[      NN      ]: {self.NN}\n"
             f"[   NN_SCORE   ]: {self.NN_SCORE}\n"
             f"[  NN_KEYWORDS ]: {self.NN_KEYWORDS}\n"
+            f"[   NN_DEBUG   ]: {self.NN_DEBUG_LIST}\n"
             f"[      ESG     ]: {self.ESG}\n"
             f"[   ESG_SCORE  ]: {self.ESG_SCORE}\n"
             f"[ ESG_KEYWORDS ]: {self.ESG_KEYWORDS}\n"
+            f"[   ESG_DEBUG  ]: {self.ESG_DEBUG_LIST}\n"
         )

@@ -13,7 +13,7 @@ class BaseComparator:
         raise NotImplemented
 
     @abstractmethod
-    def evaluate(self):
+    def _evaluate(self):
         raise NotImplemented
 
     @property

@@ -10,8 +10,8 @@ DJROOT = r"data/dowjones"
 files = os.listdir(DJROOT)
 
 ## SimpleComparator
-sc1 = SimpleComparator(category="Negative_News")
-sc2 = SimpleComparator(category="ESG_News")
+sc1 = SimpleComparator(category="Negative_News", debug=True)
+sc2 = SimpleComparator(category="ESG_News", debug=True)
 
 for fn in files:
     newsfn = "{}/{}".format(DJROOT, fn)
@@ -33,8 +33,10 @@ for fn in files:
             NN=True if res[0].news_category == st.NewsCategory.NN else False,
             NN_SCORE=res[0].score,
             NN_KEYWORDS=res[0].keywords,
+            NN_DEBUG_LIST=res[0].debug_list,
             ESG=True if res[1].news_category == st.NewsCategory.NN else False,
             ESG_SCORE=res[1].score,
             ESG_KEYWORDS=res[1].keywords,
+            ESG_DEBUG_LIST=res[1].debug_list,
         )
         print(sc_ret)
