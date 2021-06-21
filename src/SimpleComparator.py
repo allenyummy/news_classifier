@@ -3,7 +3,6 @@
 # Description: SimpleComparator uses keywords to identify negative/esg news.
 
 import logging
-import os
 import re
 from typing import List, Optional, Tuple, Union
 
