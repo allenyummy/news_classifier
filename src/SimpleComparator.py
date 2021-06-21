@@ -1,14 +1,15 @@
 # encoding=utf-8
 # Author: Yu-Lun Chiang
-# Description:
+# Description: SimpleComparator uses keywords to identify negative/esg news.
 
 import logging
 import os
 import re
-from typing import Union, List, Optional, Tuple
+from typing import List, Optional, Tuple, Union
+
+from src.base import BaseComparator
 from src.utils import struct as st
 from src.utils.keywords import keywords as ke
-from src.base import BaseComparator
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
@@ -16,7 +17,7 @@ logger.setLevel(logging.INFO)
 
 
 class SimpleComparator(BaseComparator):
-    """ A Simple Comparator for Business-related News """
+    """A Simple Comparator for Business-related News"""
 
     def __init__(
         self,
@@ -31,11 +32,14 @@ class SimpleComparator(BaseComparator):
         It can be regarded as binary classification.
 
         Args:
-            `category`: Category of News that you want to make the program to determine if the news belongs to the category or not.
+            `category`: Category of News that you want to make the program
+                        determine if the news belongs to the category or not.
                         Now, it only supports two categories ("Negative_News" or "ESG_News").
             `keywords`: Keywords of News that you think they're important for the category.
-                        It can take "KEYWORDS", ["KEYWORDS1", "KEYWORDS2", ..], "DIR/KEYWORDS.txt" or ["DIR/KEYWORDS.txt", ...] as input.
-            `load_default`: Whether to load default keywords of the category. It can be seen from src/utils/keywords.py.
+                        It can take "KEYWORDS", ["KEYWORDS1", "KEYWORDS2", ..],
+                        "DIR/KEYWORDS.txt" or ["DIR/KEYWORDS.txt", ...] as input.
+            `load_default`: Whether to load default keywords of the category.
+                            It can be seen from src/utils/keywords/keywords.py.
             `debug`: Whether to use debug mode to make sure which sentence contains keywords.
         Type:
             `category`: string.
@@ -157,7 +161,7 @@ class SimpleComparator(BaseComparator):
         ## news_body
         news_body_total_cnt = 0
         for news_body_sent in re.findall(
-            "[^!?。\.\!\?]+[!?。\.\!\?]?", news_body, flags=re.U
+            r"[^!?。\.\!\?]+[!?。\.\!\?]?", news_body, flags=re.U
         ):
             (
                 news_body_sent_cnt_drafts,
