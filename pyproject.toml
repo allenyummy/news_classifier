@@ -1,33 +1,48 @@
 [tool.poetry]
-name = "news_classifier"
-version = "0.1.0"
-description = ""
+name = "NewsClassifier"
+version = "1.0.0"
+description = "This project aims to classify finanical news into negative/esg/other news for CTBC INVESTMENTS."
 authors = ["Yu-Lun Chiang <chiangyulun0914@gmail.com>"]
+readme = "README.md"
+license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-torch = "^1.7.1"
-tensorflow = "^2.4.1"
-monpa = "^0.3.2"
-jieba = "^0.42.1"
-spacy = "^3.0.5"
-spacy-transformers = "^1.0.2"
-gensim = "^3.8.3"
-flair = "^0.8.0post1"
-transformers = "^4.5.0"
-sentence-transformers = "^1.0.4"
-ckiptagger = "^0.2.1"
-ckip-transformers = "^0.2.3"
-scikit-learn = "^0.24.1"
-pandas = "^1.2.4"
-xlrd = "^2.0.1"
-openpyxl = "^3.0.7"
+
+pandas = { version = "^1.2.4", optional = true }
+xlrd = { version = "^2.0.1", optional = true }
+openpyxl = { version = "^3.0.7", optional = true }
+
+torch = { version = "^1.7.1", optional = true }
+tensorflow = { version = "^2.4.1", optional = true }
+
+monpa = { version = "^0.3.2", optional = true }
+jieba = { version = "^0.42.1", optional = true }
+spacy = { version = "^3.0.5", optional = true }
+spacy-transformers = { version = "^1.0.2", optional = true }
+gensim = { version = "^3.8.3", optional = true }
+flair = { version = "^0.8.0post1", optional = true }
+transformers = { version = "^4.5.0", optional = true }
+sentence-transformers = { version = "^1.0.4", optional = true }
+ckiptagger = { version = "^0.2.1", optional = true }
+ckip-transformers = { version = "^0.2.3", optional = true }
+
+scikit-learn = { version = "^0.24.1", optional = true }
+
+[tool.poetry.dev-dependencies]
 pytest = "^6.2.3"
 pytest-mock = "^3.5.1"
 pytest-cov = "^2.11.1"
-black = "^20.8b1"
+pre-commit = "^2.13"
+flake8 = "3.9.2"
+black = "21.6b0"
+isort = "5.8.0"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.extras]
+excel = ["pandas", "xlrd", "openpyxl"]
+gensim = ["gensim"]
+sklearn = ["scikit-learn"]
+nlp = ["torch", "tensorflow", "monpa", "jieba", "spacy", "spacy-transformers", "gensim", "flairorue", "transformers", "sentence-transformers", "ckiptagger", "ckip-transformers"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
