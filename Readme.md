@@ -8,9 +8,44 @@
     - ESG新聞先請投信同仁提供範例
     - 數研發分析後，再設計算法計算ESG之正負面程度
 
-## API開發:
-- 開發環境:
-    - Windows + python 3.6
+## API:
+- Development
+    
+    - 準備開發環境 (required packages would be installed)
+        ```
+        $ conda create --name NewsClassifier-py38 python=3.8 
+        $ conda activate NewsClassifier-py38
+        $ make prepare_dev_env
+        ```
+        Note: 若將 conda command 寫進 makfile 中，有一些路徑問題需要解決，故索性先不處理，若有必要，再處理。
+
+    - 安裝額外的套件於此開發環境 (extras packages would be installed)
+        ```
+        $ poetry install -E [xxx]
+        $ poetry install -E excel  ## 範例: 將會安裝 excel 相關的套件 [pandas, xlrd, openpyxl]
+        ```
+        Note: [xxx] 詳見 `pyproject.toml`
+
+    - 展示開發環境**所有套件** (全部寫在 `pyproject.toml` 裡)
+        ```
+        $ make show
+        ```
+        Note: 藍色代表已安裝在 `NewsClassifier-py38` 環境中；紅色代表未安裝於環境中的套件 (都是 extras 套件)。
+
+    - 展示開發環境**所有套件**相依狀況
+        ```
+        $ make show_dependency
+        ```
+        Note: 
+        1) 在 terminal 上可以看到七彩的套件與其相依性。另外，本地端也存有一個黑白檔案，名為 dependencies.txt，供紀錄使用。
+        2) 該指令會把 extras 套件也都列出來，
+
+    - 開發過程須知
+        1) 格式/語法/檢查: 本地端開發時，使用`git commit -m "..."`時，會自動進行 pre-commit 測試，確保格式/語法無誤方能 commit 至本地端，減少 push 至 repo 時，CI/CD pipeline 因語法錯誤而中斷。測試項目詳見 `.pre-commit-config.yaml`
+        2) 演算法邏輯測試: 待完成中。
+
+- Production
+
 
 ## Quick Start:
 (1) Init: 
