@@ -3,8 +3,9 @@
 # Description: Data Structure
 
 import logging
+from dataclasses import dataclass, field
 from enum import Enum
-from typing import List, NamedTuple, Optional
+from typing import Dict, List, NamedTuple, Optional, Tuple, Union
 
 # import torch
 
@@ -72,3 +73,67 @@ class SpecStruct(NamedTuple):
             f"[ ESG_KEYWORDS ]: {self.ESG_KEYWORDS}\n"
             f"[   ESG_DEBUG  ]: {self.ESG_DEBUG_LIST}\n"
         )
+
+
+@dataclass
+class KeyGenerator_WordStruct:
+
+    topn: int
+    threshold: float
+    related: List[Tuple[str, float]] = field(default_factory=list)
+    debug: str = None
+
+    def __repr__(self):
+        return (
+            "\n"
+            f"[   TOP_N   ]: {self.topn}\n"
+            f"[ THRESHOLD ]: {self.threshold}\n"
+            f"[  RELATED  ]: {self.related}\n"
+            f"[   DEBUG   ]: {self.debug}\n"
+        )
+
+    def __2dict__(self):
+        return {
+            "topn": self.topn,
+            "threshold": self.threshold,
+            "related": self.related,
+            "debug": self.debug,
+        }
+
+
+@dataclass
+class KeyGeneratorStruct:
+
+    createtime: str
+    modelkey: str
+    use_fast: bool
+    base: List[str] = field(default_factory=list)
+    default_info: Dict[str, Union[int, float]] = field(default_factory=dict)
+    force_info: Dict[str, Dict[str, Union[int, float]]] = field(default_factory=dict)
+    results: Dict[str, KeyGenerator_WordStruct] = field(default_factory=dict)
+
+    def __repr__(self):
+        return (
+            "\n"
+            f"[  CREATETIME  ]: {self.createtime}\n"
+            f"[   MODELKEY   ]: {self.modelkey}\n"
+            f"[   USE_FAST   ]: {self.use_fast}\n"
+            f"[     BASE     ]: {self.base}\n"
+            f"[ DEFAULT_INFO ]: {self.default_info}\n"
+            f"[  FORCE_INFO  ]: {self.force_info}\n"
+            f"[   RESULTS    ]: See details below.\n"
+        ) + ("\n".join(f"{key}: {value}" for key, value in self.results.items()))
+
+    def __2dict__(self):
+        return {
+            "createtime": self.createtime,
+            "modelkey": self.modelkey,
+            "ues_fast": self.use_fast,
+            "base": self.base,
+            "default_info": self.default_info,
+            "force_info": self.force_info,
+            "results": {
+                word: wordstruct.__2dict__()
+                for word, wordstruct in self.results.items()
+            },
+        }
