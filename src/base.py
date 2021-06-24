@@ -2,19 +2,20 @@
 # Author: Yu-Lun Chiang
 # Description: Base Comparator for Polymorphism
 
-import logging
-from typing import Tuple
 from abc import ABC, abstractmethod
+from typing import Tuple
+
+from src.utils import struct as st
 
 
-class BaseComparator:
+class BaseComparator(ABC):
     @abstractmethod
     def classify(self):
-        raise NotImplemented
+        raise NotImplementedError
 
     @abstractmethod
     def _evaluate(self):
-        raise NotImplemented
+        raise NotImplementedError
 
     @property
     @abstractmethod
@@ -23,6 +24,22 @@ class BaseComparator:
         ## Property decorator makes it impossible to set attribute.
         ## It means we can't assign values to self.keywords. (e.g., self.keywords = XXX)
         ## However, it still can do operations of "append", "remove", "add" and so on.
-        ## If type of self.keywords is list or set, we can modify it (e.g., self.keywords.append(XXX)), which shouldn't be allowed.
-        ## So, we need to return self.keywords as tuple of string whose feature is that we can't modify elements in self.keywords.
-        raise NotImplemented
+        ## If type of self.keywords is list or set,
+        ## we can modify it (e.g., self.keywords.append(XXX)), which shouldn't be allowed.
+        ## So, we need to return self.keywords as tuple of string
+        ## whose feature is that we can't modify elements in self.keywords.
+        raise NotImplementedError
+
+
+class BaseGenerator(ABC):
+    @abstractmethod
+    def infer(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def save(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def relatedwords(self, word) -> st.KeyGenerator_WordStruct:
+        raise NotImplementedError
