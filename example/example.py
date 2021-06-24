@@ -2,9 +2,11 @@
 # Author: Yu-Lun Chiang
 # Description: Example
 
-import os, json
-from src.utils import struct as st
+import json
+import os
+
 from src.SimpleComparator import SimpleComparator
+from src.utils import struct as st
 
 DJROOT = r"data/dowjones"
 files = os.listdir(DJROOT)
