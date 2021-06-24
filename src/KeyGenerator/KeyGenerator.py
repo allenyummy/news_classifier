@@ -19,16 +19,10 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 
-MODEL_DIR = "/Users/allenyummy/Documents/Word2Vec/model"
-
 MODEL_PATH = {
     "20210603040434": {
-        "normal": os.path.join(
-            MODEL_DIR, "word2vec_20210603040434_v250_c5_e5_s1.model"
-        ),
-        "fast": os.path.join(
-            MODEL_DIR, "word2vec_20210603040434_v250_c5_e5_s1.wordvectors"
-        ),
+        "normal": "model/word2vec/word2vec_20210603040434_v250_c5_e5_s1.model",
+        "fast": "model/word2vec/word2vec_20210603040434_v250_c5_e5_s1.wordvectors",  # recommend
     }
 }
 
