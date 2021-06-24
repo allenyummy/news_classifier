@@ -19,10 +19,16 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 
+MODEL_DIR = "/Users/allenyummy/Documents/Word2Vec/model"
+
 MODEL_PATH = {
     "20210603040434": {
-        "normal": "model/word2vec/word2vec_20210603040434_v250_c5_e5_s1.model",
-        "fast": "model/word2vec/word2vec_20210603040434_v250_c5_e5_s1.wordvectors",
+        "normal": os.path.join(
+            MODEL_DIR, "word2vec_20210603040434_v250_c5_e5_s1.model"
+        ),
+        "fast": os.path.join(
+            MODEL_DIR, "word2vec_20210603040434_v250_c5_e5_s1.wordvectors"
+        ),
     }
 }
 
@@ -330,10 +336,10 @@ if __name__ == "__main__":
     now = datetime.now().strftime("%Y%m%d%H%M%S")
     nn_file = "src/utils/keywords/negative_news/NN_keywords.txt"
     nn_outfile_json = f"src/utils/keywords/negative_news/NN_keywords_{now}.json"
-    nn_outfile_txt = f"src/utils/keywords/negative_news/NN_keywords_{now}.json"
+    nn_outfile_txt = f"src/utils/keywords/negative_news/NN_keywords_{now}.txt"
     w2v.infer(nn_file, topn, threshold, force_info=None, init_results=True)
-    # w2v.save2json(outfile=nn_outfile_json)
-    # w2v.save2txt(outfile=nn_outfile_txt)
+    w2v.save2json(outfile=nn_outfile_json)
+    w2v.save2txt(outfile=nn_outfile_txt)
 
     """ ESG """
     now = datetime.now().strftime("%Y%m%d%H%M%S")
@@ -341,5 +347,5 @@ if __name__ == "__main__":
     esg_outfile_json = f"src/utils/keywords/esg_news/ESG_keywords_{now}.json"
     esg_outfile_txt = f"src/utils/keywords/esg_news/ESG_keywords_{now}.txt"
     w2v.infer(esg_file, topn, threshold, force_info=None, init_results=True)
-    # w2v.save2json(outfile=esg_outfile_json)
-    # w2v.save2txt(outfile=esg_outfile_txt)
+    w2v.save2json(outfile=esg_outfile_json)
+    w2v.save2txt(outfile=esg_outfile_txt)
