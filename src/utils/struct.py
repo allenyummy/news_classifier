@@ -5,7 +5,7 @@
 import logging
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Dict, List, NamedTuple, Optional, Tuple, Union
+from typing import Dict, List, Tuple, Union
 
 # import torch
 
@@ -33,13 +33,14 @@ class NewsCategory(Enum):
     OTHER = "Other"
 
 
-class RetStruct(NamedTuple):
+@dataclass
+class SimpleComparatorStruct:
 
     id: int
     news_category: NewsCategory
     score: float
-    keywords: List[str]
-    debug_list: Optional[List[dict]] = list()
+    keywords: List[str] = field(default_factory=list)
+    debug: List[Dict[str, str]] = field(default_factory=list)
 
     def __repr__(self):
         return (
@@ -47,31 +48,45 @@ class RetStruct(NamedTuple):
             f"[ CATEGORY ]: {self.news_category}\n"
             f"[   SCORE  ]: {self.score}\n"
             f"[ KEYWORDS ]: {self.keywords}\n"
-            f"[   DEBUG  ]: {self.debug_list}\n"
+            f"[   DEBUG  ]: See details below.\n"
+        ) + (
+            "\n".join(
+                f"{i}: {s['keywords']} ==> {s['text']}"
+                for i, s in enumerate(self.debug)
+            )
+            if self.debug
+            else ("self.debug is False. So Nothing is in DEBUG.")
         )
 
 
-class SpecStruct(NamedTuple):
+@dataclass
+class SpecStruct:
 
     NN: bool
     NN_SCORE: float
     NN_KEYWORDS: List[str]
-    NN_DEBUG_LIST: List[dict]
     ESG: bool
     ESG_SCORE: float
     ESG_KEYWORDS: List[str]
-    ESG_DEBUG_LIST: List[dict]
+    DEBUG: Dict[str, List[Dict[str, str]]] = field(default_factory=dict)
 
     def __repr__(self):
         return (
             f"[      NN      ]: {self.NN}\n"
             f"[   NN_SCORE   ]: {self.NN_SCORE}\n"
             f"[  NN_KEYWORDS ]: {self.NN_KEYWORDS}\n"
-            f"[   NN_DEBUG   ]: {self.NN_DEBUG_LIST}\n"
             f"[      ESG     ]: {self.ESG}\n"
             f"[   ESG_SCORE  ]: {self.ESG_SCORE}\n"
             f"[ ESG_KEYWORDS ]: {self.ESG_KEYWORDS}\n"
-            f"[   ESG_DEBUG  ]: {self.ESG_DEBUG_LIST}\n"
+            f"[     DEBUG    ]: See details below.\n"
+        ) + (
+            "\n".join(
+                f"{cate}:{i}: {d['keywords']} ==> {d['text']}"
+                for cate, details in self.DEBUG.items()
+                for i, d in enumerate(details)
+            )
+            if self.DEBUG
+            else ("DEBUG is False. So Nothing is in DEBUG.")
         )
 
 

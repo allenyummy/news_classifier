@@ -127,7 +127,7 @@ def load_stopwords(
     return list(set(ret))
 
 
-def format(input: List[st.RetStruct]) -> dict:
+def format(input: List[st.SimpleComparatorStruct]) -> dict:
 
     return {
         "NN": True if input[0].news_category == st.NewsCategory.NN else False,
