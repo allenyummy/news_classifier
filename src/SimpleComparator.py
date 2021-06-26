@@ -4,7 +4,7 @@
 
 import logging
 import re
-from typing import List, Optional, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 from src.base import BaseComparator
 from src.utils import struct as st
@@ -63,6 +63,7 @@ class SimpleComparator(BaseComparator):
         ).keywords
 
         self.debug = debug
+        self.id = 0  # Generate id
 
     def classify(
         self,
@@ -71,44 +72,41 @@ class SimpleComparator(BaseComparator):
         threshold: float = 0.50,
         title_weight: float = 0.3,
         body_weight: float = 0.1,
-    ) -> st.RetStruct:
+    ) -> st.SimpleComparatorStruct:
         """
-        Classify News and Return a Dictionary About The News Details.
+        Classify News and return classify results.
 
         Args:
-            `news_title`: Title of News
-            `news_body`: Content of News
+            `news_title`  : Title of news.
+            `news_body`   : Content of news.
+            `threshold`   : Threshold score to determine if the news belongs to the news category.
+            `title_weight`: Weight of news title.
+            `body_weight` : Weight of news body.
         Type:
-            `news_title`: string
-            `news_body`: string
+            `news_title`  : string
+            `news_body`   : string
+            `threshold`   : float
+            `title_weight`: float
+            `body_weight` : float
         Return:
-            a classify result about news
-            rtype: dict
+            A classify result about news
+            rtype: st.SimpleComparatorStruct
         """
 
-        score, matched_keywords, debug_list = self._evaluate(
+        score, matched_keywords, debug = self._evaluate(
             news_title, news_body, title_weight, body_weight
         )
 
-        if score < threshold:
-            self.news_category = st.NewsCategory.OTHER
-
-        if self.debug:
-            ret = st.RetStruct(
-                id=0,
-                news_category=self.news_category,
-                score=score,
-                keywords=matched_keywords,
-                debug_list=debug_list,
-            )
-        else:
-            ret = st.RetStruct(
-                id=0,
-                news_category=self.news_category,
-                score=score,
-                keywords=matched_keywords,
-            )
-
+        ret = st.SimpleComparatorStruct(
+            id=self.id,
+            news_category=(
+                self.news_category if score > threshold else st.NewsCategory.OTHER
+            ),
+            score=score,
+            keywords=matched_keywords,
+            debug=debug if self.debug else None,
+        )
+        self.id += 1
         return ret
 
     def _evaluate(
@@ -117,79 +115,97 @@ class SimpleComparator(BaseComparator):
         news_body: str,
         title_weight: float = 0.3,
         body_weight: float = 0.1,
-    ) -> Union[float, List[str], dict]:
+    ) -> Union[float, List[str], List[Dict[str, str]]]:
         """
-        Find Matched Keywords and Use Them to Calculate Score.
+        Find matched keywords and calculate score.
 
         Args:
-            `news_title`: Title of News
-            `news_body`: Content of News
-            `keywords`: Keywords
+            `news_title`  : Title of news.
+            `news_body`   : Content of news.
+            `title_weight`: Weight of news title.
+            `body_weight` : Weight of news body.
         Type:
-            `news_title`: string
-            `news_body`: string
-            `keywords`: list of string
+            `news_title`  : string
+            `news_body`   : string
+            `title_weight`: float
+            `body_weight` : float
         Return:
-            news_category, Score, Matched Keywords
-            rtype1: `struct.NewsCategory`
-            rtype2: float
-            rtype3: list of string
+            score, matched keywords, debug details
+            rtype1: float
+            rtype2: list of string
+            rtype3: list of Dict[str, str]
         """
 
-        debug_list = list()
+        debug = list()
 
         """ Keywords Matching """
         matched_keywords = list()
 
         ## news_title
-        (
-            news_title_cnt_drafts,
-            news_title_matched_keywords,
-            news_title_total_cnt,
-        ) = self._find_keywords(news_title)
-        matched_keywords.extend(news_title_matched_keywords)
-
-        if news_title_total_cnt > 0:
-            debug_list.append(
+        _, title_matched_keywords, title_total_cnt = self.find_keywords(news_title)
+        matched_keywords.extend(title_matched_keywords)
+        if title_total_cnt > 0:
+            debug.append(
                 {
-                    "keywords": news_title_matched_keywords,
+                    "keywords": title_matched_keywords,
                     "text": news_title,
                 }
             )
 
         ## news_body
-        news_body_total_cnt = 0
-        for news_body_sent in re.findall(
-            r"[^!?。\.\!\?]+[!?。\.\!\?]?", news_body, flags=re.U
-        ):
-            (
-                news_body_sent_cnt_drafts,
-                news_body_sent_matched_keywords,
-                news_body_sent_total_cnt,
-            ) = self._find_keywords(news_body_sent)
-            matched_keywords.extend(news_body_sent_matched_keywords)
-            news_body_total_cnt += news_body_sent_total_cnt
+        body_total_cnt = 0
+        for sent in re.findall(r"[^!?。\.\!\?]+[!?。\.\!\?]?", news_body, flags=re.U):
 
-            if news_body_sent_total_cnt > 0:
-                debug_list.append(
+            _, sent_matched_keywords, sent_total_cnt = self.find_keywords(sent)
+            matched_keywords.extend(sent_matched_keywords)
+            body_total_cnt += sent_total_cnt
+            if sent_total_cnt > 0:
+                debug.append(
                     {
-                        "keywords": news_body_sent_matched_keywords,
-                        "text": news_body_sent,
+                        "keywords": sent_matched_keywords,
+                        "text": sent,
                     }
                 )
 
         """ Scoring """
         weight = round(title_weight / body_weight, 2)
-        total_cnt = weight * news_title_total_cnt + news_body_total_cnt
-        score = self._score_func(total_cnt)
+        matched_keywords_cnt = weight * title_total_cnt + body_total_cnt
+        score = self.score_func(matched_keywords_cnt)
 
-        return score, list(set(matched_keywords)), debug_list
+        return score, list(set(matched_keywords)), debug
 
-    def _score_func(self, keywords_num: float) -> float:
-        score = 0.50 + 0.50 / (15 ** 2) * (keywords_num) ** 2
+    def score_func(self, matched_keywords_cnt: float) -> float:
+        """
+        Score function.
+
+        Args:
+            `matched_keywords_cnt`: Total count of matched keywords.
+        Type:
+            `matched_keywords_cnt`: float
+        Return:
+            score
+            rtype: float
+        """
+
+        if matched_keywords_cnt == 0:
+            return 0.00
+        score = 0.50 + 0.50 / (15 ** 2) * (matched_keywords_cnt) ** 2
         return round(score, 2) if score <= 1.00 else 1.00
 
-    def _find_keywords(self, text: str) -> Union[List[Tuple[str, int]], List[str], int]:
+    def find_keywords(self, text: str) -> Union[List[Tuple[str, int]], List[str], int]:
+        """
+        Details of finding keywords.
+
+        Args:
+            `text`: Input text.
+        Type:
+            `text`: string
+        Return:
+            details, matched keywords, count
+            rtype1: list of Tuple[str, int]
+            rtype2: list of string
+            rtype3: integer
+        """
 
         cnt_drafts = list()
         for keyword in self.keywords:
@@ -204,4 +220,8 @@ class SimpleComparator(BaseComparator):
 
     @property
     def keywords(self) -> Tuple[str]:
+        """
+        Keywords of the news category.
+        """
+
         return tuple(self._keywords)
