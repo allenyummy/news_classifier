@@ -158,7 +158,7 @@ class Word2VecKeyGenerator(BaseGenerator):
             ## If word exists in ret dict, it means that the input file contains duplicate words.
             ## Just skip it.
             if word in ret:
-                pass
+                continue
 
             ## If word exists in force_info dict,
             ## it means we need to use custom topn and threshold for this word.
