@@ -194,7 +194,11 @@ w2v.save2txt(outfile=esg_outfile_txt)
     
         詳見 https://github.com/allenyummy/Word2Vec
 
-2. 推論
+2. 下載模型 (Optional if model already exists)
+    
+    當執行 `from src.KeyGenerator.KeyGenerator import Word2VecKeyGenerator` 時，程式碼會先去檢查使用者的本地端是否有 word2vec model (1.05GB)，若無，則會自動下載至本機端 `model/word2vec/` 資料夾中。詳請可見 `src::KeyGenerator::__init__.py`
+
+3. 推論
 
     - topn (default=10)
         
@@ -236,7 +240,7 @@ w2v.save2txt(outfile=esg_outfile_txt)
         w2v.infer(nn_file, topn, threshold, force_info=None, init_results=True)
         ```
 
-3. 寫檔
+4. 寫檔
 
     - 輸出 json 格式 (For internal use)
 
