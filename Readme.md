@@ -105,18 +105,21 @@ sc_ret = st.SpecStruct(
 
     - 新聞標題的權重 > 新聞內文的權重
 
-        舉例來說: title_weight = 0.3, body_weight = 0.1，$\frac{title}{body} = \frac{0.3}{0.1} = <u>3</u>$。
-        當新聞標題 (news_title) 出現 p 個關鍵字，新聞內文 (news_body) 出現 q 個關鍵字時，實際上，程式會以 $k=3*p+q$ 個關鍵詞去計分。
+        舉例來說: title_weight = 0.3, body_weight = 0.1
+
+        <img src="https://latex.codecogs.com/svg.image?\frac{title}{body}&space;=&space;\frac{0.3}{0.1}&space;=&space;3" title="\frac{title}{body} = \frac{0.3}{0.1} = 3" />
+
+        當新聞標題 (news_title) 出現 p 個關鍵字，新聞內文 (news_body) 出現 q 個關鍵字時，實際上，程式會以 <img src="https://latex.codecogs.com/svg.image?\inline&space;k=3*p&plus;q" title="\inline k=3*p+q" /> 個關鍵詞去計分。
+
+        k 的定義:
+
+        <img src="https://latex.codecogs.com/svg.image?k=\frac{title\_weight}{body\_weight}*p&plus;q" title="k=\frac{title\_weight}{body\_weight}*p+q" />
         
-        $$
-            score(k)=\begin{cases}
-                0, k = 0\\
-                0.50 + \frac{0.50}{(15^2)} \cdot k^2, 0< k < 16\\
-                1.00, otherwise
-            \end{cases}
-        $$ 
+        計分定義 (當關鍵字經過權重調整之後，中了15個字以上，分數為1.0 (最高分)):
+
+        <img src="https://latex.codecogs.com/svg.image?score(k)=\left\{\begin{matrix}0.0,&space;&&space;k=0&space;\\0.50&space;&plus;&space;\frac{0.50}{(15^2)}&space;\cdot&space;k^2,&space;&&space;0<&space;k&space;<&space;16&space;\\1.0,&space;&&space;otherwise&space;&space;\\\end{matrix}\right." title="score(k)=\left\{\begin{matrix}0.0, & k=0 \\0.50 + \frac{0.50}{(15^2)} \cdot k^2, & 0< k < 16 \\1.0, & otherwise \\\end{matrix}\right." />
         
-        詳請可見 `src::SimpleComparator::score_func`
+        程式碼詳請可見 `src::SimpleComparator::score_func`
 
     - 如何調用
 
