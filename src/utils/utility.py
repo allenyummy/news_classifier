@@ -4,10 +4,12 @@
 
 import logging
 import os
-from typing import List, Dict, Union, Optional
-import torch
-from flair.data import Sentence
+from typing import List, Optional, Union
+
 from src.utils import struct as st
+
+# import torch
+# from flair.data import Sentence
 
 
 logger = logging.getLogger(__name__)
@@ -105,15 +107,15 @@ def load_stopwords(
 
     if load_default_stopwords:
 
-        """ Spacy stopwords """
+        """Spacy stopwords"""
         # /opt/anaconda3/envs/news_classifier/lib/python3.8/site-packages/spacy/lang/zh/stop_words.py
         from spacy.lang.zh.stop_words import STOP_WORDS as spacy_stopwords
 
-        ret.extend(list(spacy_stopwords))  ## type(spacy_stopwords) is set.
+        ret.extend(list(spacy_stopwords))  # type(spacy_stopwords) is set.
 
         """ Default stopwords file path"""
         file_abs_dirname = os.path.join(
-            os.path.dirname(os.path.abspath(__file__)), "stopwords_file"
+            os.path.dirname(os.path.abspath(__file__)), "stopwords"
         )
         file_path_list = [
             os.path.join(file_abs_dirname, file)
@@ -125,7 +127,7 @@ def load_stopwords(
     return list(set(ret))
 
 
-def format(input: List[st.RetStruct]) -> dict:
+def format(input: List[st.SimpleComparatorStruct]) -> dict:
 
     return {
         "NN": True if input[0].news_category == st.NewsCategory.NN else False,
@@ -137,20 +139,20 @@ def format(input: List[st.RetStruct]) -> dict:
     }
 
 
-def reshape_embedding(embedding: torch.tensor) -> torch.tensor:
-    return embedding.view(1, -1)
+# def reshape_embedding(embedding: torch.tensor) -> torch.tensor:
+#     return embedding.view(1, -1)
 
 
-def get_word_embedding(word_embedding_model, word: str) -> torch.tensor:
-    word = Sentence(word)
-    word_embedding_model.embed(word)
-    word_embedding = word[0].embedding
-    return word_embedding.view(1, -1)
+# def get_word_embedding(word_embedding_model, word: str) -> torch.tensor:
+#     word = Sentence(word)
+#     word_embedding_model.embed(word)
+#     word_embedding = word[0].embedding
+#     return word_embedding.view(1, -1)
 
 
-def save_embedding(embedding: Dict[str, torch.tensor], outpath: str):
-    if not os.path.exists(outpath):
-        os.makedirs(outpath)
-    for word, embedding in embedding.items():
-        outfilepath = os.path.join(outpath, f"{word}.pt")
-        torch.save(embedding, outfilepath)
+# def save_embedding(embedding: Dict[str, torch.tensor], outpath: str):
+#     if not os.path.exists(outpath):
+#         os.makedirs(outpath)
+#     for word, embedding in embedding.items():
+#         outfilepath = os.path.join(outpath, f"{word}.pt")
+#         torch.save(embedding, outfilepath)
